@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+
+    <!-- BootStrap -->
+    <link
+      rel="stylesheet"
+      href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </head>
+  <body>
+      <p id="x"></p>
+      <br />
+      <input type="text" id="Longitude" placeholder="Longitude" />
+      <input type="text" id="Lattitude" placeholder="Lattitude" />
+      <button id="getData" onclick="getData()">Get data</button>
+      <br /><br />
+
+            <div class="card-deck d-block">
+
+                <div class="card-fluid bg-primary mb-3 ml-5 mr-5">
+                    <div class="card-body container-fluid text-center">
+
+                        <h3 id="tableHeader0" class="text-center"></h3>
+                        <table id="table0" class="table table-dark table-hover">
+                            <thead id="tHead0" class="font-weight-bolder">
+                                <tr>
+                                    <th>Tid</th>
+                                    <th>Grader i celcius</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tBody0"></tbody>
+                        </table>
+
+                    </div>
+                </div>
+
+                        <div class="card-fluid bg-primary mb-3 ml-5 mr-5">
+                            <div class="card-body text-center">
+
+                                <h3 id="tableHeader1" class="text-center"></h3>
+                                <table id="table1" class="table table-dark table-hover">
+                                    <thead id="tHead1">
+                                        <tr>
+                                            <th>Tid</th>
+                                            <th>Grader i celcius</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tBody1"></tbody>
+                                </table>
+
+                            </div>
+                        </div>
+
+                        <div class="card-fluid bg-primary mb-3 ml-5 mr-5">
+                            <div class="card-body text-center">
+
+                                <h3 id="tableHeader2" class="text-center"></h3>
+                                <table id="table2" class="table table-dark table-hover">
+                                    <thead id="tHead2">
+                                        <tr>
+                                            <th>Tid</th>
+                                            <th>Grader i celcius</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tBody2"></tbody>
+                                </table>
+
+                            </div>
+                        </div>
+
+                        <div class="card-fluid bg-primary mb-3 ml-5 mr-5">
+                            <div class="card-body text-center">
+
+                                <h3 id="tableHeader3" class="text-center"></h3>
+                                <table id="table3" class="table table-dark table-hover">
+                                    <thead id="tHead3">
+                                        <tr>
+                                            <th>Tid</th>
+                                            <th>Grader i celcius</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tBody3"></tbody>
+                                </table>
+
+                            </div>
+                        </div>
+
+                        <div class="card-fluid bg-primary mb-3 ml-5 mr-5">
+                            <div class="card-body text-center">
+
+                                <h3 id="tableHeader4" class="text-center"></h3>
+                                <table id="table4" class="table table-dark table-hover">
+                                    <thead id="tHead4">
+                                        <tr>
+                                            <th>Tid</th>
+                                            <th>Grader i celcius</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tBody4"></tbody>
+                                </table>
+
+                            </div>
+                        </div>
+
+                        <div class="card-fluid bg-primary mb-3 ml-5 mr-5">
+                            <div class="card-body text-center">
+
+                                <h3 id="tableHeader5" class="text-center"></h3>
+                                <table id="table5" class="table table-dark table-hover">
+                                    <thead id="tHead5">
+                                        <tr>
+                                            <th>Tid</th>
+                                            <th>Grader i celcius</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tBody5"></tbody>
+                                </table>
+
+                            </div>
+                        </div>
+
+                        <div class="card-fluid bg-primary mb-3 ml-5 mr-5">
+                            <div class="card-body text-center">
+
+                                <h3 id="tableHeader6" class="text-center"></h3>
+                                <table id="table6" class="table table-dark table-hover">
+                                    <thead id="tHead6">
+                                        <tr>
+                                            <th>Tid</th>
+                                            <th>Grader i celcius</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tBody6"></tbody>
+                                </table>
+
+                            </div>
+                        </div>
+
+                        <div class="card-fluid bg-primary mb-3 ml-5 mr-5">
+                            <div class="card-body text-center">
+
+                                <h3 id="tableHeader7" class="text-center"></h3>
+                                <table id="table7" class="table table-dark table-hover">
+                                    <thead id="tHead7">
+                                        <tr>
+                                            <th>Tid</th>
+                                            <th>Grader i celcius</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tBody7"></tbody>
+                                </table>
+
+                            </div>
+                        </div>
+
+                        <div class="card-fluid bg-primary mb-3 ml-5 mr-5">
+                            <div class="card-body text-center">
+
+                                <h3 id="tableHeader8" class="text-center"></h3>
+                                <table id="table8" class="table table-dark table-hover">
+                                    <thead id="tHead8">
+                                        <tr>
+                                            <th>Tid</th>
+                                            <th>Grader i celcius</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tBody8"></tbody>
+                                </table>
+
+                            </div>
+                        </div>
+
+                        <div class="card-fluid bg-primary mb-3 ml-5 mr-5">
+                            <div class="card-body text-center">
+
+                                <h3 id="tableHeader9" class="text-center"></h3>
+                                <table id="table9" class="table table-dark table-hover">
+                                    <thead id="tHead9">
+                                        <tr>
+                                            <th>Tid</th>
+                                            <th>Grader i celcius</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tBody9"></tbody>
+                                </table>
+
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <script src="main.js"></script>
+</body>
+</html>
