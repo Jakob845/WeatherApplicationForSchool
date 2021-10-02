@@ -1,0 +1,133 @@
+.myCanvasCss {
+  background-color: white;
+  width: 60%;
+  height: 30%;
+  border-radius: 2%;
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: 50% auto;
+  width: 100%;
+  row-gap: 5%;
+}
+
+.grid-item:last-child {
+  grid-column: 1 / span 2;
+}
+
+.grid-item:nth-child(2) {
+  text-align: end;
+  margin: 1%;
+}
+
+#TheFavoriteList,
+#lblFavo {
+  text-align: start;
+  float: left;
+}
+
+.myBtnCss {
+  width: 30%;
+  height: 20%;
+}
+
+.myTableCss {
+  width: 100%;
+}
+
+#card0 {
+  background-color: #4285f4 !important;
+}
+
+label {
+  font-weight: bold;
+  min-width: fit-content;
+}
+
+#taBort {
+  font-size: 0.8rem;
+  width: 150px;
+  max-width: 48%;
+  min-width: 150px;
+}
+
+#wrapper {
+  width: 100%;
+  height: 20rem;
+}
+
+#favoriteWrapper {
+  border: solid 3px gray;
+  height: 150px;
+  width: 150px;
+  min-width: 150px;
+  overflow: auto;
+  box-shadow: 3px 2px lightslategrey;
+  max-width: 48%;
+  display: inline-block;
+  align-self: end;
+}
+
+#btnAddFavo {
+  height: 1.7rem;
+  width: 40%;
+  max-width: 40%;
+  max-height: 1.7rem;
+  text-align: left;
+  font-size: 0.6rem;
+}
+
+#PlaceName {
+  max-width: 60%;
+  max-height: 1.7rem;
+}
+
+#lblFavo {
+  background-color: darkslategray;
+  color: white;
+}
+
+#getData,
+#Lattitude,
+#Longitude,
+#getLocBtn {
+  max-width: 16rem;
+  margin-bottom: 1%;
+  width: 40vw;
+  min-width: 10rem;
+}
+#getLocBtn,
+#getData {
+  border-radius: 2%;
+}
+
+#StartCanvases {
+  width: 40%;
+  margin-bottom: 15%;
+}
+
+#StartCanvas {
+  background-color: lightskyblue;
+  height: 600px;
+  width: 100%;
+  height: 50%;
+  border-radius: 25%;
+  border: 2px solid black;
+}
+.CanvasAnim {
+  animation: OutOfScreen 1s ease-in-out;
+}
+
+/* animations */
+@keyframes OutOfScreen {
+  0% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-1000px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
