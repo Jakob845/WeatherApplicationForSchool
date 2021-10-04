@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>VäderApplikation</title>
 
     <!-- BootStrap -->
     <link
@@ -28,48 +28,47 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <!-- Exprimentera med div(block) o span = inline -->
-
+    <h1>Väder Applikation</h1>
     <div class="grid-container">
       <div class="grid-item">
-        <button
-          onclick="getLocation()"
-          id="getLocBtn"
-          class="btn-primary ml-1 mb-1"
-        >
+        <button onclick="getLocation()" id="getLocBtn" class="btn-primary mb-1">
           Hämta dina nuvarande kordinater
         </button>
 
         <br />
+        <label>Longitude</label>
+        <br />
         <input
           type="text"
           id="Longitude"
-          class="ml-1 mb-0"
-          ;
+          class="mb-0"
           placeholder="Longitude"
         />
+        <br />
+        <label>Lattitude</label>
         <br />
         <input
           type="text"
           id="Lattitude"
           placeholder="Lattitude"
-          class="ml-1 mb-0"
+          class="mb-0"
         />
         <br />
 
         <button
           id="getData"
-          class="btn btn-primary ml-1 mt-1"
+          class="btn btn-primary mt-1"
           type="button"
-          onclick="getData(), PutListDataIntoTables(), PutListDataIntoTables()"
+          onclick="getData(); PutListDataIntoTables()"
         >
           Uppdatera Väder Tabeller
         </button>
       </div>
 
       <div class="grid-item">
+        <label id="lblFavo">Favoriter</label>
+        <br />
         <div id="favoriteWrapper">
-          <label id="lblFavo" class="px-2">Favoriter</label>
           <dl id="TheFavoriteList" class="ml-1"></dl>
 
           <div class="d-inline" style="bottom: 0">
@@ -91,13 +90,13 @@
 
       <div class="grid-item">
         <div class="container-fluid text-center mt-1" id="StartCanvases">
-          <canvas height="600px" width="1000px" id="StartCanvas"></canvas>
+          <canvas height="600" width="1000" id="StartCanvas"></canvas>
           <br />
           <div oninput="AnimateCanv()">
-            <label>Gävle</label>
-            <input type="radio" id="rbn1" name="RadioSelect" checked />
             <label>Här</label>
-            <input type="radio" id="rbn2" name="RadioSelect" />
+            <input type="radio" id="rbn2" name="RadioSelect" checked />
+            <label>Gävle</label>
+            <input type="radio" id="rbn1" name="RadioSelect" />
             <label>Favorit</label>
             <input type="radio" id="rbn3" name="RadioSelect" />
           </div>
@@ -106,6 +105,8 @@
     </div>
 
     <div class="card-deck d-block" id="cardDeck"></div>
+
+    <p class="text-center"><a href="#">Gå till Toppen</a></p>
 
     <footer class="fixed-bottom ml-2">Källa: SMHI</footer>
 

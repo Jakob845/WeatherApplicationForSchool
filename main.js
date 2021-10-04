@@ -4,16 +4,8 @@
 let jsonText;
 let ArrayOfObjects;
 
-let day0 = [];
-let day1 = [];
-let day2 = [];
-let day3 = [];
-let day4 = [];
-let day5 = [];
-let day6 = [];
-let day7 = [];
-let day8 = [];
-let day9 = [];
+//2d array that holds all the data organized into 10 arrays. 1 for each day.
+let days = [[]];
 
 var la;
 var lo;
@@ -88,9 +80,6 @@ var lo;
         }
       }
 
-      var longi;
-      var latti;
-
       function GetGavleData(){
         ShowWeatherOnStartCanvas('Gävle', 17.14549, 60.67426);
       }
@@ -112,8 +101,8 @@ var lo;
           if(selected != null && selected != undefined){
             let i = favoriteList.findIndex((x) => x.namn === selected.name);
             ShowWeatherOnStartCanvas(favoriteList[i].namn, 
-              Math.round(favoriteList[i].long * 1000000)/1000000, 
-              Math.round(favoriteList[i].latt * 1000000)/1000000);
+              Math.round(favoriteList[i].long * 100000)/100000, 
+              Math.round(favoriteList[i].latt * 100000)/100000);
           }else{
             var c = document.getElementById("StartCanvas");
             var ctx = c.getContext("2d");
@@ -139,10 +128,10 @@ var lo;
             ctx.fillText(place, 400, 100);
       
             setTimeout(function(){
-            let tem = day0[1].parameters[FindIndex("day0", 1, 't')].values[0];
+            let tem = days[0][1].parameters[FindIndex(0, 1, 't')].values[0];
             ctx.fillText("temp: " + tem + " °C", 10, 350);
             
-            let startSymbNbr = day0[1].parameters[FindIndex("day0", 1, 'Wsymb2')].values[0];
+            let startSymbNbr = days[0][1].parameters[FindIndex(0, 1, 'Wsymb2')].values[0];
             let startSymb = new Image();
             startSymb.src = WhichSymbol(startSymbNbr);
             startSymb.onload = () => {
@@ -154,8 +143,10 @@ var lo;
 //This function finds the corect address to get the json file from.
 function getData() {
     
-    let lon = Math.round(parseFloat(document.getElementById("Longitude").value) *100000)/100000; //mellan 0 - 30
-    let lat = Math.round(parseFloat(document.getElementById("Lattitude").value) *100000)/100000; //mellan 54 - 72
+    var lon = Math.round(parseFloat(document.getElementById("Longitude").value) *100000)/100000; //mellan 0 - 30
+    var lat = Math.round(parseFloat(document.getElementById("Lattitude").value) *100000)/100000; //mellan 54 - 72
+
+    console.log("long: " + lon + " latt: " + lat);
 
     //if the input are numbers
     if (!isNaN(lon) && isFinite(lon) && !isNaN(lat) && isFinite(lat)) {
@@ -188,55 +179,23 @@ function getData() {
 
   function TurnJsonStringInToOrganizedLists() {
 
-    ClearLists();
-
-    //This is an ugly solution but i could not find out how to store all the arrays into
-    // multidimensional array in js.
-    //to sort the data in to seperate arrays for each day.
-    //So here i loop through all the objects stored from the json file and then store it in
+    //Clear the arrays
+    days = [[]];
+    //Here i loop through all the objects stored from the json file and then store it in
     //seperate arrays 
     var newDay = 0;
+    var tempArr = [];
     for(let i = 1; i < ArrayOfObjects.timeSeries.length; i++){
-
-        //if the new date do not match the old date it's a new day
-        if(ArrayOfObjects.timeSeries[i].validTime.slice(0, 10) != ArrayOfObjects.timeSeries[i-1].validTime.slice(0, 10)){
-          newDay++;
-        }
-
-        switch(newDay){
-            case 0:
-                day0.push(ArrayOfObjects.timeSeries[i]);
-              break;
-            case 1:
-                day1.push(ArrayOfObjects.timeSeries[i]);
-              break;
-            case 2:
-                day2.push(ArrayOfObjects.timeSeries[i]);
-              break;
-            case 3:
-                day3.push(ArrayOfObjects.timeSeries[i]);
-              break;
-            case 4:
-                day4.push(ArrayOfObjects.timeSeries[i]);
-              break;
-            case 5:
-                day5.push(ArrayOfObjects.timeSeries[i]);
-              break;
-            case 6:
-                day6.push(ArrayOfObjects.timeSeries[i]);
-              break;
-            case 7:
-                day7.push(ArrayOfObjects.timeSeries[i]);
-              break;
-            case 8:
-                day8.push(ArrayOfObjects.timeSeries[i]);
-              break;
-            case 9:
-                day9.push(ArrayOfObjects.timeSeries[i]);
-              break;
-                
-        }
+      //if the new date do not match the old date it's a new day
+      if(ArrayOfObjects.timeSeries[i].validTime.slice(0, 10) != ArrayOfObjects.timeSeries[i-1].validTime.slice(0, 10)){
+        days[newDay] = tempArr;
+        tempArr = [];
+        newDay++;
       }
+      
+      tempArr.push(ArrayOfObjects.timeSeries[i]);
+      }
+      PutListDataIntoTables();
     }
 
     //This function puts data into the tables and the canvases in the cards
@@ -249,9 +208,10 @@ function getData() {
 
     var d = new Date();    
     var i;
-    for (i = 0; i < 10; i++){
+    
+    //Outer loop to go through all the "day arrays"
+    for (i = 0; i < days.length; i++){
       let table = document.getElementById("tBody" + i);
-      let day = "day" + i;
       
       //some vars to input to canvases when a complete array has gone through
       let dayTemp = new Array;
@@ -262,7 +222,8 @@ function getData() {
       let canv = document.getElementById("canvas" + i);
       let ctx = canv.getContext('2d');
       
-        for (let a = 0; a < eval(day).length; a++){
+        //Inner loop to take data from the current "day array" from the outer loop and show it in the corresponding cards canvases and tables
+        for (let a = 0; a < days[i].length; a++){
 
           let dateHeaderText;
           ctx.font = 'Bold 100px Calibri';
@@ -275,9 +236,9 @@ function getData() {
               dateHeaderText = "Imorgon";
               ctx.fillText(dateHeaderText, 600, 100);
             } else{
-                if(a!= eval(day).length -1)
+                if(a!= days[i][a].length -1)
                 dateHeaderText = "";
-                dateHeaderText = eval(day)[a].validTime.toString().slice(0, 10);
+                dateHeaderText = days[i][a].validTime.toString().slice(0, 10);
                 ctx.fillText(dateHeaderText, 500, 100);
             }
 
@@ -293,24 +254,24 @@ function getData() {
 
             //This if statement puts "NU" under time if it is now. 
             //Else it puts the hour stored in array; 
-            if(eval(day)[a].validTime.toString().slice(11, 13) == d.getHours() &&
-            eval(day)[a].validTime.toString().split('T')[0] == d.toISOString().split('T')[0]
+            if(days[i][a].validTime.toString().slice(11, 13) == d.getHours() &&
+            days[i][a].validTime.toString().split('T')[0] == d.toISOString().split('T')[0]
             ){
                 cell0.innerHTML = "NU";
                 row.setAttribute("class", "bg-success");
             }else{
-                cell0.innerHTML = eval(day)[a].validTime.toString().slice(11, 13); 
+                cell0.innerHTML = days[i][a].validTime.toString().slice(11, 13); 
               }
 
               //The rest of this loop is used to put data in to the tables in the cards
               //temp
-              let temp = eval(day)[a].parameters[FindIndex(day, a, 't')].values[0];
+              let temp = days[i][a].parameters[FindIndex(i, a, 't')].values[0];
               cell1.innerHTML = temp + " °C";
               dayTemp.push(temp);
 
               //pmin and pmax
-              let pMin = eval(day)[a].parameters[FindIndex(day, a, 'pmin')].values[0];
-              let pMax = eval(day)[a].parameters[FindIndex(day, a, 'pmax')].values[0];
+              let pMin = days[i][a].parameters[FindIndex(i, a, 'pmin')].values[0];
+              let pMax = days[i][a].parameters[FindIndex(i, a, 'pmax')].values[0];
 
               cell2.innerHTML = pMin + " - " + pMax + " mm";
 
@@ -318,13 +279,13 @@ function getData() {
               maxRain += pMax;
 
               //Wind Speed
-              cell3.innerHTML = eval(day)[a].parameters[FindIndex(day, a, 'ws')].values[0] + " m/s";
+              cell3.innerHTML = days[i][a].parameters[FindIndex(i, a, 'ws')].values[0] + " m/s";
               //Wind Direction
-              cell4.innerHTML = WindDirection(eval(day)[a].parameters[FindIndex(day, a, 'wd')].values[0]);
+              cell4.innerHTML = WindDirection(days[i][a].parameters[FindIndex(i, a, 'wd')].values[0]);
 
               //WeatherSymbol
               var img = document.createElement('IMG');
-              let symbolNumber = eval(day)[a].parameters[FindIndex(day, a, 'Wsymb2')].values[0];
+              let symbolNumber = days[i][a].parameters[FindIndex(i, a, 'Wsymb2')].values[0];
               daySymbol.push(symbolNumber);
               let symbolName = WhichSymbol(symbolNumber);
               img.src = symbolName;
@@ -408,7 +369,7 @@ function getData() {
 
 //A function for finding the correct index in the data
     function FindIndex(day, number, name){
-      return eval(day)[number].parameters.findIndex((x) => x.name === name);
+      return days[day][number].parameters.findIndex((x) => x.name === name);
     }
 
     //A function to get the correct weatherSymbol
@@ -466,7 +427,7 @@ function getData() {
         return "weatherSymbols/KraftigtSnöFall.png"
       break;
       default: 
-        return "Fel:Ingen bild";
+        return "Symbol saknas";
       break;
     }
   } 
@@ -492,19 +453,6 @@ function getData() {
     }else{
       return "error";
     }
-  }
-
-  function ClearLists(){
-    day0 = [];
-    day1 = [];
-    day2 = [];
-    day3 = [];
-    day4 = [];
-    day5 = [];
-    day6 = [];
-    day7 = [];
-    day8 = [];
-    day9 = [];
   }
 
   function ClearTables(){

@@ -5,6 +5,17 @@
   border-radius: 2%;
 }
 
+h1 {
+  background-color: lightskyblue;
+  width: 100%;
+  text-align: center;
+  padding: 5vh;
+  color: white;
+  font-family: Arial, Helvetica, sans-serif;
+  text-shadow: 0.2vw 0.2vw black;
+  font-size: 5vw;
+}
+
 .grid-container {
   display: grid;
   grid-template-columns: 50% auto;
@@ -16,15 +27,17 @@
   grid-column: 1 / span 2;
 }
 
+.grid-item:nth-child(1) {
+  margin: 1%;
+}
+
 .grid-item:nth-child(2) {
   text-align: end;
   margin: 1%;
 }
 
-#TheFavoriteList,
-#lblFavo {
+#TheFavoriteList {
   text-align: start;
-  float: left;
 }
 
 .myBtnCss {
@@ -43,6 +56,13 @@
 label {
   font-weight: bold;
   min-width: fit-content;
+}
+
+#lblFavo {
+  text-align: center;
+  width: 100%;
+  max-width: 150px;
+  margin-bottom: -0.5rem;
 }
 
 #taBort {
@@ -66,7 +86,6 @@ label {
   box-shadow: 3px 2px lightslategrey;
   max-width: 48%;
   display: inline-block;
-  align-self: end;
 }
 
 #btnAddFavo {
