@@ -1,5 +1,5 @@
 
-      window.onload = getLocation(), WhatRadioIsChecked();
+      window.onload = getLocation();
 
 let jsonText;
 let ArrayOfObjects;
@@ -16,23 +16,27 @@ var cityName;
         if (navigator.geolocation) {
           navigator.geolocation.getCurrentPosition(SetPosition);
         } else { 
-          alert("Geolocation is not supported by this browser.");
+          alert("Geolocation stöds tyvärr inte av den här webbläsaren.");
         }
 
       }
       function SetPosition(position) {
         newLong = Math.round(position.coords.longitude * 100000) / 100000;
         newLatt = Math.round(position.coords.latitude * 100000) / 100000;
-        
-        if(document.getElementById("rbn2").checked){
-          AnimateCanv();
-        }
+        cityName = "Här";
+        getJsonText(
+          "https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/" +
+            newLong +
+            "/lat/" +
+            newLatt +
+            "/data.json"
+        );
       }
 
       function CityCall(){
         let serchText = document.getElementById("city").value;
-
-        getJsonString("https://api.openweathermap.org/data/2.5/weather?q="+serchText+"&appid=c50c5f9fab4832642640ad4f901a8c4f");
+        const a = "c50c5f9fab4832642640ad4f901a8c4f";
+        getJsonString("https://api.openweathermap.org/data/2.5/weather?q="+serchText+"&lang=sv&appid="+a);
 
         async function getJsonString(filePath) {
           try{
@@ -42,8 +46,7 @@ var cityName;
         
             newLong = await obje.coord.lon;
             newLatt = await obje.coord.lat;
-            cityName = await obje.name.slice("C", obje.name.length);
-            console.log(cityName);
+            cityName = await obje.name;
 
            await getJsonText(
               "https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/" +
@@ -66,91 +69,12 @@ var cityName;
         setTimeout(function(){ c.classList.remove("CanvasAnim"); }, 1100);
         c.classList.add("CanvasAnim");
 
-        var ctx = c.getContext("2d");
-        ctx.font = 'Bold 75px Calibri';
-
-
-        let rbn1 = document.getElementById("rbn1");
-        let rbn2 = document.getElementById("rbn2");
-        let rbn3 = document.getElementById("rbn3");
-
-          if(rbn1.checked){
-            setTimeout(function(){ 
-              GetGavleData();
-           }, 400);
-          }else if(rbn2.checked){
-            setTimeout(function(){ 
-              GetCurrentPosData();
-            }, 400);
-          }else{
-            setTimeout(function(){ 
-              GetChoosenFavoritePosData();
-              }, 400);
-          }
-      }
-
-      //Checks what radiobutton is checked on page load
-      function WhatRadioIsChecked(){
-        let rbn1 = document.getElementById("rbn1");
-        let rbn2 = document.getElementById("rbn2");
-        
-        if(rbn1.checked){
-          GetGavleData();
-        }
-        else if(rbn2.checked){
-          GetCurrentPosData();
-        }
-        else{
-          GetChoosenFavoritePosData();
-        }
-      }
-
-      function GetGavleData(){
-        ShowWeatherOnStartCanvas('Gävle', 17.14549, 60.67426);
-      }
-      
-      function GetCurrentPosData(){
-        if(newLatt != null || newLong != null){
-          ShowWeatherOnStartCanvas('Här', newLong, newLatt);
-        }else{
-          var c = document.getElementById("StartCanvas");
-          var ctx = c.getContext("2d");
-          ctx.font = 'Bold 75px Calibri';
-          ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); 
-          ctx.fillText("Gick inte att hämta din position", 10, 150);
-        }
-      }
-
-      function GetChoosenFavoritePosData(){
-
-          if(selected != null && selected != undefined){
-            let i = favoriteList.findIndex((x) => x.namn === selected.name);
-            ShowWeatherOnStartCanvas(favoriteList[i].namn, 
-              Math.round(favoriteList[i].long * 100000)/100000, 
-              Math.round(favoriteList[i].latt * 100000)/100000);
-          }else{
-            var c = document.getElementById("StartCanvas");
-            var ctx = c.getContext("2d");
-            ctx.font = 'Bold 75px Calibri';
-            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-            ctx.fillText("Välj från dina favoriter", 20, 150);
-          }
-        }
-
-      function ShowWeatherOnStartCanvas(place ,lon, lat){
-        getJsonText(
-          "https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/" +
-            lon +
-            "/lat/" +
-            lat +
-            "/data.json"
-            );
-          
-            var c = document.getElementById("StartCanvas");
+        setTimeout(function(){
+                          var c = document.getElementById("StartCanvas");
             var ctx = c.getContext("2d");
             ctx.font = 'Bold 75px Calibri';
             ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); 
-            ctx.fillText(place, 400, 100);
+            ctx.fillText(cityName, 400, 100);
       
             setTimeout(function(){
             let tem = days[0][1].parameters[FindIndex(0, 1, 't')].values[0];
@@ -163,6 +87,7 @@ var cityName;
               ctx.drawImage(startSymb, 500, 160);
               }
             }, 200);
+          }, 400);
       }
 
   //fetches the data from the fileLoc that is inputed and parse it into an array of objects
@@ -202,13 +127,6 @@ var cityName;
 
     //This function puts data into the tables and the canvases in the cards
     function PutListDataIntoTables(){
-
-      if(cityName === undefined){
-
-        document.getElementById("cityName").innerHTML = "Här";
-      }else{
-        document.getElementById("cityName").innerHTML = cityName;
-      }
 
     ClearTables();
     ClearCardCanvases();
@@ -351,7 +269,7 @@ var cityName;
             ctx = c.getContext('2d');
             ctx.drawImage(MosteOccuringImageArray[im], 1000, 150);
           }
-        
+          AnimateCanv();
   }
 
   //A function that return the moste occuring weatherSymbol on each day

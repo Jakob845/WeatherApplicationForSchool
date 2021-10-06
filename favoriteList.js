@@ -57,13 +57,6 @@ let favoritePlace = class{
 
     function LoadFavoriteList(){
 
-      //adds some locations as default if it's the first time loading the page.
-      if ("favL" in localStorage) {
-        //do nothing
-    } else {
-        localStorage.favL = '[{"namn":"Uppsala","long":"17.64879","latt":"59.85840"},{"namn":"Storvreta","long":"17.70894","latt":"59.95924"},{"namn":"Gävle","long":"17.14549","latt":"60.67426"},{"namn":"Tierp","long":"17.52196","latt":"60.34381"},{"namn":"Kebnekaise","long":"18.52872","latt":"67.90503"}]';
-    }
-
         favoriteList = JSON.parse(localStorage.favL);
 
 
@@ -107,12 +100,6 @@ function SelectedFavorite(select){
   //selected = clicked item and set its bgc to lightblue for visual effect
   selected = document.getElementById(select);
   selected.setAttribute("style", "background-color: lightblue;");
-
-  let rbnCheck = document.getElementById("rbn3");
-  if(rbnCheck.checked){
-
-    AnimateCanv();
-  }
 }
 
 function RemoveSelected(){
