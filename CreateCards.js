@@ -1,4 +1,3 @@
-
 window.onload = CreateCard();
 
 function CreateCard() {

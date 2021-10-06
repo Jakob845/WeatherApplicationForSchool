@@ -13,9 +13,9 @@ let favoritePlace = class{
 
   function AddFavorite(){
     
-    let favName = document.getElementById("PlaceName").value;
+    favName = cityName;
 
-      if(favName != ""){
+      if(favName != "" && favName != undefined){
 
         let duplicateExists = false;
         for(i=0; i<favoriteList.length; i++){
@@ -26,10 +26,10 @@ let favoritePlace = class{
       if(!duplicateExists){
 
 
-      let long = document.getElementById("Longitude").value;
-      let latt = document.getElementById("Lattitude").value;
+      let long = newLong
+      let latt = newLatt;
   
-      //if the inputed numbers
+      //if the inputed cords are numbers
       if (!isNaN(long) && isFinite(long) && !isNaN(latt) && isFinite(latt)) {
 
           let favPlace = new favoritePlace(favoritePlace.namn = favName, favoritePlace.long = long, favoritePlace.latt = latt);
@@ -43,7 +43,6 @@ let favoritePlace = class{
             document.getElementById("result").innerHTML = "Tyvärr så stöder inte din webbläsare localStorage..";
           }
 
-        document.getElementById("PlaceName").value = "";
         LoadFavoriteList();
       }else{
         alert("Du måste ange siffror i kordinatfälten");
@@ -58,6 +57,7 @@ let favoritePlace = class{
 
     function LoadFavoriteList(){
 
+      //adds some locations as default if it's the first time loading the page.
       if ("favL" in localStorage) {
         //do nothing
     } else {
@@ -94,8 +94,9 @@ function AddClickedFavoriteToInputFields(place){
   var index = favoriteList.findIndex((p) => p.namn.toString() === place.toString());
   //alert( "Longitude: " + favoriteList[index].long + " Lattitude: " + favoriteList[index].latt);
   if(index != undefined)
-  document.getElementById("Longitude").value = favoriteList[index].long;
-  document.getElementById("Lattitude").value = favoriteList[index].latt;
+  document.getElementById("city").value = favoriteList[index].namn;
+  newLatt = favoriteList[index].latt;
+  newLong = favoriteList[index].long;
 }
 
 function SelectedFavorite(select){

@@ -7,31 +7,55 @@ let ArrayOfObjects;
 //2d array that holds all the data organized into 10 arrays. 1 for each day.
 let days = [[]];
 
-var la;
-var lo;
+
+var newLong;
+var newLatt;
+var cityName;
     
     function getLocation() {
-      if(la == null || lo == null){
         if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(savePosition);
+          navigator.geolocation.getCurrentPosition(SetPosition);
         } else { 
           alert("Geolocation is not supported by this browser.");
         }
-      }else{
-        document.getElementById("Longitude").value = lo;
-        document.getElementById("Lattitude").value = la;
-        return;
-      }
 
       }
-      function savePosition(position) {
-        lo = Math.round(position.coords.longitude * 100000) / 100000;
-        la = Math.round(position.coords.latitude * 100000) / 100000;
-        document.getElementById("Longitude").value = lo;
-        document.getElementById("Lattitude").value = la;
+      function SetPosition(position) {
+        newLong = Math.round(position.coords.longitude * 100000) / 100000;
+        newLatt = Math.round(position.coords.latitude * 100000) / 100000;
         
         if(document.getElementById("rbn2").checked){
           AnimateCanv();
+        }
+      }
+
+      function CityCall(){
+        let serchText = document.getElementById("city").value;
+
+        getJsonString("https://api.openweathermap.org/data/2.5/weather?q="+serchText+"&appid=c50c5f9fab4832642640ad4f901a8c4f");
+
+        async function getJsonString(filePath) {
+          try{
+            let myFile = await fetch(filePath);
+            let jsonTest = await myFile.text();
+            let obje = JSON.parse(jsonTest);
+        
+            newLong = await obje.coord.lon;
+            newLatt = await obje.coord.lat;
+            cityName = await obje.name.slice("C", obje.name.length);
+            console.log(cityName);
+
+           await getJsonText(
+              "https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/" +
+                newLong +
+                "/lat/" +
+                newLatt +
+                "/data.json"
+            );
+          }
+          catch{
+            alert("Tyvärr så gick det inte att hitta platsen du sökte efter.");
+          }
         }
       }
       
@@ -65,6 +89,7 @@ var lo;
           }
       }
 
+      //Checks what radiobutton is checked on page load
       function WhatRadioIsChecked(){
         let rbn1 = document.getElementById("rbn1");
         let rbn2 = document.getElementById("rbn2");
@@ -85,8 +110,8 @@ var lo;
       }
       
       function GetCurrentPosData(){
-        if(la != null || lo != null){
-          ShowWeatherOnStartCanvas('Här', lo, la);
+        if(newLatt != null || newLong != null){
+          ShowWeatherOnStartCanvas('Här', newLong, newLatt);
         }else{
           var c = document.getElementById("StartCanvas");
           var ctx = c.getContext("2d");
@@ -140,29 +165,6 @@ var lo;
             }, 200);
       }
 
-//This function finds the corect address to get the json file from.
-function getData() {
-    
-    var lon = Math.round(parseFloat(document.getElementById("Longitude").value) *100000)/100000; //mellan 0 - 30
-    var lat = Math.round(parseFloat(document.getElementById("Lattitude").value) *100000)/100000; //mellan 54 - 72
-
-    console.log("long: " + lon + " latt: " + lat);
-
-    //if the input are numbers
-    if (!isNaN(lon) && isFinite(lon) && !isNaN(lat) && isFinite(lat)) {
-      getJsonText(
-        "https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/" +
-          lon +
-          "/lat/" +
-          lat +
-          "/data.json"
-      );
-    } else {
-      alert("Du kan bara skriva siffror i kordinatfälten.");
-      return;
-    }
-  }
-
   //fetches the data from the fileLoc that is inputed and parse it into an array of objects
   async function getJsonText(filePath) {
     try{
@@ -200,6 +202,13 @@ function getData() {
 
     //This function puts data into the tables and the canvases in the cards
     function PutListDataIntoTables(){
+
+      if(cityName === undefined){
+
+        document.getElementById("cityName").innerHTML = "Här";
+      }else{
+        document.getElementById("cityName").innerHTML = cityName;
+      }
 
     ClearTables();
     ClearCardCanvases();
@@ -320,6 +329,7 @@ function getData() {
           ctx.font = 'italic 60px Arial';
           ctx.fillText("(" + mosteOccuringWeatherSymbolName.slice(15, mosteOccuringWeatherSymbolName.length - 4) + ")", 1000, 600);
 
+          //saves the pictures to an array and load them when they are completed
           MosteOccuringImageArray.push(ima);
 
         }
@@ -427,7 +437,7 @@ function getData() {
         return "weatherSymbols/KraftigtSnöFall.png"
       break;
       default: 
-        return "Symbol saknas";
+        return "weatherSymbols/Symbolsaknas.png"
       break;
     }
   } 
