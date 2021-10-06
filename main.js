@@ -35,8 +35,8 @@ var cityName;
 
       function CityCall(){
         let serchText = document.getElementById("city").value;
-        const a = "c50c5f9fab4832642640ad4f901a8c4f";
-        getJsonString("https://api.openweathermap.org/data/2.5/weather?q="+serchText+"&lang=sv&appid="+a);
+        const APIKey = "Put Api key here";
+        getJsonString("https://api.openweathermap.org/data/2.5/weather?q="+serchText+"&lang=sv&appid="+APIKey);
 
         async function getJsonString(filePath) {
           try{
