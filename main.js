@@ -35,7 +35,7 @@ var cityName;
 
       function CityCall(){
         let serchText = document.getElementById("city").value;
-        const APIKey = "Put Api key here";
+        const APIKey = "API key here";
         getJsonString("https://api.openweathermap.org/data/2.5/weather?q="+serchText+"&lang=sv&appid="+APIKey);
 
         async function getJsonString(filePath) {
@@ -90,6 +90,8 @@ var cityName;
           }, 400);
       }
 
+      let HideCardIndex = 0;
+
   //fetches the data from the fileLoc that is inputed and parse it into an array of objects
   async function getJsonText(filePath) {
     try{
@@ -100,7 +102,10 @@ var cityName;
       TurnJsonStringInToOrganizedLists();
     }
     catch{
-      alert("Tyvärr så gick det inte att hämta data för dom här kordinaterna just nu.");
+      alert("Tyvärr så gick det inte att hämta all data för den här platsen just nu.");
+      if(HideCardIndex!= null && HideCardIndex!= NaN && HideCardIndex!= "" && HideCardIndex!= undefined){
+        document.getElementById("card"+HideCardIndex).setAttribute("style", "display: none;");
+      }
     }
   }
 
@@ -137,7 +142,7 @@ var cityName;
     var i;
     
     //Outer loop to go through all the "day arrays"
-    for (i = 0; i < days.length; i++){
+    for (i = 0; i < 10; i++){
       let table = document.getElementById("tBody" + i);
       
       //some vars to input to canvases when a complete array has gone through
@@ -148,6 +153,11 @@ var cityName;
 
       let canv = document.getElementById("canvas" + i);
       let ctx = canv.getContext('2d');
+
+      if(days[i] === null || days[i] === undefined){
+        HideCardIndex = i;
+        continue;
+      }
       
         //Inner loop to take data from the current "day array" from the outer loop and show it in the corresponding cards canvases and tables
         for (let a = 0; a < days[i].length; a++){
@@ -268,8 +278,8 @@ var cityName;
             c = document.getElementById("canvas" + im);
             ctx = c.getContext('2d');
             ctx.drawImage(MosteOccuringImageArray[im], 1000, 150);
+            AnimateCanv();
           }
-          AnimateCanv();
   }
 
   //A function that return the moste occuring weatherSymbol on each day
