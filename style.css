@@ -89,17 +89,8 @@ label {
 }
 
 #btnAddFavo {
-  height: 1.7rem;
-  width: 40%;
-  max-width: 40%;
-  max-height: 1.7rem;
-  text-align: left;
-  font-size: 0.6rem;
-}
-
-#PlaceName {
-  max-width: 60%;
-  max-height: 1.7rem;
+width: 100%;
+text-align: center;
 }
 
 #lblFavo {
@@ -108,9 +99,7 @@ label {
 }
 
 #getData,
-#Lattitude,
-#Longitude,
-#getLocBtn {
+#city {
   max-width: 16rem;
   margin-bottom: 1%;
   width: 40vw;

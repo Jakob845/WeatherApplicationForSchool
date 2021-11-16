@@ -13,9 +13,9 @@ let favoritePlace = class{
 
   function AddFavorite(){
     
-    let favName = document.getElementById("PlaceName").value;
+    favName = cityName;
 
-      if(favName != ""){
+      if(favName != "" && favName != undefined){
 
         let duplicateExists = false;
         for(i=0; i<favoriteList.length; i++){
@@ -26,10 +26,10 @@ let favoritePlace = class{
       if(!duplicateExists){
 
 
-      let long = document.getElementById("Longitude").value;
-      let latt = document.getElementById("Lattitude").value;
+      let long = newLong
+      let latt = newLatt;
   
-      //if the inputed numbers
+      //if the inputed cords are numbers
       if (!isNaN(long) && isFinite(long) && !isNaN(latt) && isFinite(latt)) {
 
           let favPlace = new favoritePlace(favoritePlace.namn = favName, favoritePlace.long = long, favoritePlace.latt = latt);
@@ -43,7 +43,6 @@ let favoritePlace = class{
             document.getElementById("result").innerHTML = "Tyvärr så stöder inte din webbläsare localStorage..";
           }
 
-        document.getElementById("PlaceName").value = "";
         LoadFavoriteList();
       }else{
         alert("Du måste ange siffror i kordinatfälten");
@@ -57,12 +56,6 @@ let favoritePlace = class{
   }
 
     function LoadFavoriteList(){
-
-      if ("favL" in localStorage) {
-        //do nothing
-    } else {
-        localStorage.favL = '[{"namn":"Uppsala","long":"17.64879","latt":"59.85840"},{"namn":"Storvreta","long":"17.70894","latt":"59.95924"},{"namn":"Gävle","long":"17.14549","latt":"60.67426"},{"namn":"Tierp","long":"17.52196","latt":"60.34381"},{"namn":"Kebnekaise","long":"18.52872","latt":"67.90503"}]';
-    }
 
         favoriteList = JSON.parse(localStorage.favL);
 
@@ -94,8 +87,17 @@ function AddClickedFavoriteToInputFields(place){
   var index = favoriteList.findIndex((p) => p.namn.toString() === place.toString());
   //alert( "Longitude: " + favoriteList[index].long + " Lattitude: " + favoriteList[index].latt);
   if(index != undefined)
-  document.getElementById("Longitude").value = favoriteList[index].long;
-  document.getElementById("Lattitude").value = favoriteList[index].latt;
+  {
+  if(favoriteList[index].namn === "Här"){
+    document.getElementById("city").value = "";
+    getLocation();
+  }else{
+    document.getElementById("city").value = favoriteList[index].namn;
+    newLatt = favoriteList[index].latt;
+    newLong = favoriteList[index].long;
+    CityCall();
+  }
+}
 }
 
 function SelectedFavorite(select){
@@ -106,12 +108,6 @@ function SelectedFavorite(select){
   //selected = clicked item and set its bgc to lightblue for visual effect
   selected = document.getElementById(select);
   selected.setAttribute("style", "background-color: lightblue;");
-
-  let rbnCheck = document.getElementById("rbn3");
-  if(rbnCheck.checked){
-
-    AnimateCanv();
-  }
 }
 
 function RemoveSelected(){

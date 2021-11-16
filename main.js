@@ -1,5 +1,5 @@
 
-      window.onload = getLocation(), WhatRadioIsChecked();
+      window.onload = getLocation();
 
 let jsonText;
 let ArrayOfObjects;
@@ -7,31 +7,58 @@ let ArrayOfObjects;
 //2d array that holds all the data organized into 10 arrays. 1 for each day.
 let days = [[]];
 
-var la;
-var lo;
+
+var newLong;
+var newLatt;
+var cityName;
     
     function getLocation() {
-      if(la == null || lo == null){
         if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(savePosition);
+          navigator.geolocation.getCurrentPosition(SetPosition);
         } else { 
-          alert("Geolocation is not supported by this browser.");
+          alert("Geolocation stöds tyvärr inte av den här webbläsaren.");
         }
-      }else{
-        document.getElementById("Longitude").value = lo;
-        document.getElementById("Lattitude").value = la;
-        return;
-      }
 
       }
-      function savePosition(position) {
-        lo = Math.round(position.coords.longitude * 100000) / 100000;
-        la = Math.round(position.coords.latitude * 100000) / 100000;
-        document.getElementById("Longitude").value = lo;
-        document.getElementById("Lattitude").value = la;
+      function SetPosition(position) {
+        newLong = Math.round(position.coords.longitude * 100000) / 100000;
+        newLatt = Math.round(position.coords.latitude * 100000) / 100000;
+        cityName = "Här";
+        getJsonText(
+          "https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/" +
+            newLong +
+            "/lat/" +
+            newLatt +
+            "/data.json"
+        );
+      }
+
+      function CityCall(){
+        let serchText = document.getElementById("city").value;
+        const APIKey = "API KEY GOES HERE";
+        getJsonString("https://api.openweathermap.org/data/2.5/weather?q="+serchText+"&lang=sv&appid="+APIKey);
+
+        async function getJsonString(filePath) {
+          try{
+            let myFile = await fetch(filePath);
+            let jsonTest = await myFile.text();
+            let obje = JSON.parse(jsonTest);
         
-        if(document.getElementById("rbn2").checked){
-          AnimateCanv();
+            newLong = await obje.coord.lon;
+            newLatt = await obje.coord.lat;
+            cityName = await obje.name;
+
+           await getJsonText(
+              "https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/" +
+                newLong +
+                "/lat/" +
+                newLatt +
+                "/data.json"
+            );
+          }
+          catch{
+            alert("Tyvärr så gick det inte att hitta platsen du sökte efter.");
+          }
         }
       }
       
@@ -42,127 +69,39 @@ var lo;
         setTimeout(function(){ c.classList.remove("CanvasAnim"); }, 1100);
         c.classList.add("CanvasAnim");
 
-        var ctx = c.getContext("2d");
-        ctx.font = 'Bold 75px Calibri';
-
-
-        let rbn1 = document.getElementById("rbn1");
-        let rbn2 = document.getElementById("rbn2");
-        let rbn3 = document.getElementById("rbn3");
-
-          if(rbn1.checked){
-            setTimeout(function(){ 
-              GetGavleData();
-           }, 400);
-          }else if(rbn2.checked){
-            setTimeout(function(){ 
-              GetCurrentPosData();
-            }, 400);
-          }else{
-            setTimeout(function(){ 
-              GetChoosenFavoritePosData();
-              }, 400);
-          }
-      }
-
-      function WhatRadioIsChecked(){
-        let rbn1 = document.getElementById("rbn1");
-        let rbn2 = document.getElementById("rbn2");
-        
-        if(rbn1.checked){
-          GetGavleData();
-        }
-        else if(rbn2.checked){
-          GetCurrentPosData();
-        }
-        else{
-          GetChoosenFavoritePosData();
-        }
-      }
-
-      function GetGavleData(){
-        ShowWeatherOnStartCanvas('Gävle', 17.14549, 60.67426);
-      }
-      
-      function GetCurrentPosData(){
-        if(la != null || lo != null){
-          ShowWeatherOnStartCanvas('Här', lo, la);
-        }else{
-          var c = document.getElementById("StartCanvas");
-          var ctx = c.getContext("2d");
-          ctx.font = 'Bold 75px Calibri';
-          ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); 
-          ctx.fillText("Gick inte att hämta din position", 10, 150);
-        }
-      }
-
-      function GetChoosenFavoritePosData(){
-
-          if(selected != null && selected != undefined){
-            let i = favoriteList.findIndex((x) => x.namn === selected.name);
-            ShowWeatherOnStartCanvas(favoriteList[i].namn, 
-              Math.round(favoriteList[i].long * 100000)/100000, 
-              Math.round(favoriteList[i].latt * 100000)/100000);
-          }else{
-            var c = document.getElementById("StartCanvas");
-            var ctx = c.getContext("2d");
-            ctx.font = 'Bold 75px Calibri';
-            ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-            ctx.fillText("Välj från dina favoriter", 20, 150);
-          }
-        }
-
-      function ShowWeatherOnStartCanvas(place ,lon, lat){
-        getJsonText(
-          "https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/" +
-            lon +
-            "/lat/" +
-            lat +
-            "/data.json"
-            );
-          
-            var c = document.getElementById("StartCanvas");
+        setTimeout(function(){
+                          var c = document.getElementById("StartCanvas");
             var ctx = c.getContext("2d");
             ctx.font = 'Bold 75px Calibri';
             ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height); 
-            ctx.fillText(place, 400, 100);
+            ctx.fillText(cityName, 400, 100);
       
+            let tI = 0;
+            let vI = 0;
+            let t = new Date();
+
+            if(t.getHours() === 23 && t.getMinutes() >= 30){
+              vI = 1;
+            } else if(t.getMinutes() <= 30){
+              tI = 1;
+            }
+
             setTimeout(function(){
-            let tem = days[0][1].parameters[FindIndex(0, 1, 't')].values[0];
+            let tem = days[vI][tI].parameters[FindIndex(vI, tI, 't')].values[0];
             ctx.fillText("temp: " + tem + " °C", 10, 350);
             
-            let startSymbNbr = days[0][1].parameters[FindIndex(0, 1, 'Wsymb2')].values[0];
+            let startSymbNbr = days[vI][tI].parameters[FindIndex(vI, tI, 'Wsymb2')].values[0];
             let startSymb = new Image();
             startSymb.src = WhichSymbol(startSymbNbr);
             startSymb.onload = () => {
               ctx.drawImage(startSymb, 500, 160);
               }
             }, 200);
+          }, 400);
       }
 
-//This function finds the corect address to get the json file from.
-function getData() {
-    
-    var lon = Math.round(parseFloat(document.getElementById("Longitude").value) *100000)/100000; //mellan 0 - 30
-    var lat = Math.round(parseFloat(document.getElementById("Lattitude").value) *100000)/100000; //mellan 54 - 72
-
-    console.log("long: " + lon + " latt: " + lat);
-
-    //if the input are numbers
-    if (!isNaN(lon) && isFinite(lon) && !isNaN(lat) && isFinite(lat)) {
-      getJsonText(
-        "https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/" +
-          lon +
-          "/lat/" +
-          lat +
-          "/data.json"
-      );
-    } else {
-      alert("Du kan bara skriva siffror i kordinatfälten.");
-      return;
-    }
-  }
-
+let RemoveCardIndex;
+let PreviousHiddenCard;
   //fetches the data from the fileLoc that is inputed and parse it into an array of objects
   async function getJsonText(filePath) {
     try{
@@ -171,9 +110,15 @@ function getData() {
   
       ArrayOfObjects = JSON.parse(jsonText);
       TurnJsonStringInToOrganizedLists();
+
+      if(PreviousHiddenCard!= null && PreviousHiddenCard != undefined){
+        document.getElementById("card"+PreviousHiddenCard).setAttribute("style", "display: inline-block;");
+      }
     }
     catch{
-      alert("Tyvärr så gick det inte att hämta data för dom här kordinaterna just nu.");
+      //alert("Tyvärr så gick det inte att hämta all data för den här platsen just nu.");
+        document.getElementById("card"+RemoveCardIndex).setAttribute("style", "display: none");
+        PreviousHiddenCard = RemoveCardIndex;
     }
   }
 
@@ -210,7 +155,7 @@ function getData() {
     var i;
     
     //Outer loop to go through all the "day arrays"
-    for (i = 0; i < days.length; i++){
+    for (i = 0; i < 10; i++){
       let table = document.getElementById("tBody" + i);
       
       //some vars to input to canvases when a complete array has gone through
@@ -221,6 +166,11 @@ function getData() {
 
       let canv = document.getElementById("canvas" + i);
       let ctx = canv.getContext('2d');
+
+      if(days[i] === null || days[i] === undefined){
+        RemoveCardIndex = i;
+        continue;
+      }
       
         //Inner loop to take data from the current "day array" from the outer loop and show it in the corresponding cards canvases and tables
         for (let a = 0; a < days[i].length; a++){
@@ -320,6 +270,7 @@ function getData() {
           ctx.font = 'italic 60px Arial';
           ctx.fillText("(" + mosteOccuringWeatherSymbolName.slice(15, mosteOccuringWeatherSymbolName.length - 4) + ")", 1000, 600);
 
+          //saves the pictures to an array and load them when they are completed
           MosteOccuringImageArray.push(ima);
 
         }
@@ -340,8 +291,8 @@ function getData() {
             c = document.getElementById("canvas" + im);
             ctx = c.getContext('2d');
             ctx.drawImage(MosteOccuringImageArray[im], 1000, 150);
+            AnimateCanv();
           }
-        
   }
 
   //A function that return the moste occuring weatherSymbol on each day
@@ -427,7 +378,7 @@ function getData() {
         return "weatherSymbols/KraftigtSnöFall.png"
       break;
       default: 
-        return "Symbol saknas";
+        return "weatherSymbols/Symbolsaknas.png"
       break;
     }
   } 

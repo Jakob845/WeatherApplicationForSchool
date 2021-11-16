@@ -31,35 +31,15 @@
     <h1>Väder Applikation</h1>
     <div class="grid-container">
       <div class="grid-item">
-        <button onclick="getLocation()" id="getLocBtn" class="btn-primary mb-1">
-          Hämta dina nuvarande kordinater
-        </button>
-
-        <br />
-        <label>Longitude</label>
-        <br />
-        <input
-          type="text"
-          id="Longitude"
-          class="mb-0"
-          placeholder="Longitude"
-        />
-        <br />
-        <label>Lattitude</label>
-        <br />
-        <input
-          type="text"
-          id="Lattitude"
-          placeholder="Lattitude"
-          class="mb-0"
-        />
-        <br />
-
+        <label>Stad: </label>
+        <br/>
+        <input type="text" id="city" placeholder="Stad"></input>
+        <br>
         <button
           id="getData"
           class="btn btn-primary mt-1"
           type="button"
-          onclick="getData(); PutListDataIntoTables()"
+          onclick="CityCall()"
         >
           Uppdatera Väder Tabeller
         </button>
@@ -72,10 +52,9 @@
           <dl id="TheFavoriteList" class="ml-1"></dl>
 
           <div class="d-inline" style="bottom: 0">
-            <input type="text" placeholder="Namn" id="PlaceName" />
             <button
               id="btnAddFavo"
-              class="float-right btn-primary"
+              class="btn-primary"
               onclick="AddFavorite()"
             >
               LäggTill
@@ -92,14 +71,7 @@
         <div class="container-fluid text-center mt-1" id="StartCanvases">
           <canvas height="600" width="1000" id="StartCanvas"></canvas>
           <br />
-          <div oninput="AnimateCanv()">
-            <label>Här</label>
-            <input type="radio" id="rbn2" name="RadioSelect" checked />
-            <label>Gävle</label>
-            <input type="radio" id="rbn1" name="RadioSelect" />
-            <label>Favorit</label>
-            <input type="radio" id="rbn3" name="RadioSelect" />
-          </div>
+  
         </div>
       </div>
     </div>
@@ -109,7 +81,6 @@
     <p class="text-center"><a href="#">Gå till Toppen</a></p>
 
     <footer class="fixed-bottom ml-2">Källa: SMHI</footer>
-
     <script src="CreateCards.js"></script>
     <script src="favoriteList.js"></script>
     <script src="main.js"></script>
