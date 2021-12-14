@@ -35,7 +35,9 @@ var cityName;
 
       function CityCall(){
         let serchText = document.getElementById("city").value;
-        const APIKey = "API KEY GOES HERE";
+
+        const APIKey = "Your Api key goes here";
+
         getJsonString("https://api.openweathermap.org/data/2.5/weather?q="+serchText+"&lang=sv&appid="+APIKey);
 
         async function getJsonString(filePath) {
